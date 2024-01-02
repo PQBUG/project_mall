@@ -3,7 +3,9 @@ package com.imooc.mall.common;
 import com.google.common.collect.Sets;
 import com.imooc.mall.exception.ImoocMallException;
 import com.imooc.mall.exception.ImoocMallExceptionEnum;
+
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,14 @@ public class Constant {
 
     public static final String IMOOC_MALL_USER = "imooc_mall_user";
     public static final String SALT = "89234ghjhjsg$#@%&^&&/[]SA.17?18GBF";
+    public static final String EMAIL_FROM = "111@qq.com";
+    public static final String EMAIL_SUBJECT = "您的验证码";
+    public static final String JWT_KEY = "imooc-mall";
+    public static final String JWT_TOKEN = "jwt_token";
+    public static final String USER_ID = "user_id";
+    public static final String USER_NAME = "user_name";
+    public static final String USER_ROLE = "user_role";
+    public static final Long EXPIRE_TIME = 60 * 10000 * 60 * 24 * 100L;
 
     public static String FILE_UPLOAD_DIR;
 
@@ -22,6 +32,8 @@ public class Constant {
     public void setFileUploadDir(String fileUploadDir) {
         FILE_UPLOAD_DIR = fileUploadDir;
     }
+
+
 
     public interface ProductListOrderBy {
 

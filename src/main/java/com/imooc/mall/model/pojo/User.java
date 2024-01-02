@@ -12,6 +12,7 @@ public class User {
     private String personalizedSignature;
 
     private Integer role;
+    private String emailAddress;
 
     private Date createTime;
 
@@ -71,5 +72,13 @@ public class User {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 }

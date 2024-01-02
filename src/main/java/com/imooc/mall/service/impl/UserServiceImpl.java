@@ -1,12 +1,12 @@
 package com.imooc.mall.service.impl;
 
 
-import com.imooc.mall.common.Constant;
 import com.imooc.mall.exception.ImoocMallException;
 import com.imooc.mall.exception.ImoocMallExceptionEnum;
 import com.imooc.mall.model.dao.UserMapper;
 import com.imooc.mall.model.pojo.User;
 import com.imooc.mall.service.UserService;
+
 import java.security.NoSuchAlgorithmException;
 
 import com.imooc.mall.util.MD5Utils;
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void register(String userName, String password) throws ImoocMallException {
+    public void register(String userName, String password, String emailAddress) throws ImoocMallException {
         //查询用户名是否存在，不允许重名
         User result = userMapper.selectByName(userName);
         if (result != null) {
@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
         //写到数据库
         User user = new User();
         user.setUsername(userName);
+        user.setEmailAddress(emailAddress);
         try {
             user.setPassword(MD5Utils.getMD5Str(password));
         } catch (NoSuchAlgorithmException e) {
@@ -77,5 +78,14 @@ public class UserServiceImpl implements UserService {
     public boolean checkAdminRole(User user) {
         //1是普通用户，2是管理员
         return user.getRole().equals(2);
+    }
+
+    @Override
+    public boolean checkEmailRegistered(String email) {
+        User user = userMapper.selectOneByEmailAddress(email);
+        if (user != null) {
+            return false;
+        }
+        return true;
     }
 }

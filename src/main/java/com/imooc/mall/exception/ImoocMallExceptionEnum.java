@@ -26,6 +26,14 @@ public enum ImoocMallExceptionEnum {
     NO_ORDER(10020, "订单不存在"),
     NOT_YOUR_ORDER(10021, "订单不属于你"),
     WRONG_ORDER_STATUS(10022, "订单状态不符"),
+    WRONG_EMAIL(10023, "错误的邮件地址"),
+    EMAIL_ALREADY_BEEN_REGISTERED(10024, "Email地址已经被注册"),
+    EMAIL_ALREADY_BEEN_SEND(10025, "验证邮件已发送，若未收到，请稍后再试"),
+    NEED_EMAIL(10026, "邮件地址不能为空"),
+    NEED_VERIFICATION_CODE(10027, "验证码不能为空"),
+    WRONG_VERIFICATION_CODE(10028, "验证码错误"),
+    TOKEN_EXPIRED(10029, "Token过期"),
+    TOKEN_WRONG(10030, "Token解析失败"),
     SYSTEM_ERROR(20000, "系统异常，请从控制台或日志中查看具体错误信息");
     /**
      * 异常码

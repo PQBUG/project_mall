@@ -89,8 +89,7 @@ public class CategoryServiceImpl implements CategoryService {
         // 递归获取所有子类别，并组合成为一个“目录树”
         List<Category> categoryList = categoryMapper.selectCategoriesByParentId(parentId);
         if (!CollectionUtils.isEmpty(categoryList)) {
-            for (int i = 0; i < categoryList.size(); i++) {
-                Category category = categoryList.get(i);
+            for (Category category : categoryList) {
                 CategoryVO categoryVO = new CategoryVO();
                 BeanUtils.copyProperties(category, categoryVO);
                 categoryVOList.add(categoryVO);

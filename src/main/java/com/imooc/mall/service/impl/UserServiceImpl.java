@@ -83,9 +83,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkEmailRegistered(String email) {
         User user = userMapper.selectOneByEmailAddress(email);
-        if (user != null) {
-            return false;
-        }
-        return true;
+        return user == null;
     }
 }

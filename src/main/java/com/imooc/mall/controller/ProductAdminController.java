@@ -41,6 +41,9 @@ public class ProductAdminController {
     @Autowired
     ProductService productService;
 
+    @Value("${file.upload.uri}")
+    String uri;
+
     @PostMapping("/admin/product/add")
     public ApiRestResponse addProduct(@Valid @RequestBody AddProductReq addProductReq) {
         productService.add(addProductReq);
@@ -59,13 +62,10 @@ public class ProductAdminController {
         File fileDirectory = new File(Constant.FILE_UPLOAD_DIR);
         File destFile = new File(Constant.FILE_UPLOAD_DIR + newFileName);
         createFile(file, fileDirectory, destFile);
-        try {
-            return ApiRestResponse
-                    .success(getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/images/"
-                            + newFileName);
-        } catch (URISyntaxException e) {
-            return ApiRestResponse.error(ImoocMallExceptionEnum.UPLOAD_FAILED);
-        }
+        String address = uri;
+        return ApiRestResponse
+                    .success( "http://" + address + "/images/" + newFileName);
+
     }
 
     private URI getHost(URI uri) {
@@ -157,13 +157,9 @@ public class ProductAdminController {
                 .watermark(Positions.BOTTOM_RIGHT, ImageIO
                         .read(new File(Constant.FILE_UPLOAD_DIR + Constant.WATER_MARK_JPG)), Constant.IMAGE_OPA)
                 .toFile(Constant.FILE_UPLOAD_DIR + newFileName);
-        try {
-            return ApiRestResponse
-                    .success(getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/images/"
-                            + newFileName);
-        } catch (URISyntaxException e) {
-            return ApiRestResponse.error(ImoocMallExceptionEnum.UPLOAD_FAILED);
-        }
+        String address = uri;
+        return ApiRestResponse
+                .success( "http://" + address + "/images/" + newFileName);
     }
 
     private static void createFile(MultipartFile file, File fileDirectory, File destFile) {

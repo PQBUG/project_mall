@@ -99,8 +99,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product detail(Integer id) {
-        Product product = productMapper.selectByPrimaryKey(id);
-        return product;
+        return productMapper.selectByPrimaryKey(id);
     }
 
     @Override
@@ -110,8 +109,7 @@ public class ProductServiceImpl implements ProductService {
 
         //搜索处理
         if (!StringUtils.isEmpty(productListReq.getKeyword())) {
-            String keyword = new StringBuilder().append("%").append(productListReq.getKeyword())
-                    .append("%").toString();
+            String keyword = "%" + productListReq.getKeyword() + "%";
             productListQuery.setKeyword(keyword);
         }
 
@@ -171,14 +169,13 @@ public class ProductServiceImpl implements ProductService {
         FileInputStream inputStream = new FileInputStream(excelFile);
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
         XSSFSheet firstSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = firstSheet.iterator();
-        while (iterator.hasNext()){
-            Row nextRow = iterator.next();
+        for (Row nextRow : firstSheet) {
             Iterator<Cell> cellIterator = nextRow.cellIterator();
             Product aProduct = new Product();
-            while (cellIterator.hasNext()){
+            while (cellIterator.hasNext()) {
                 Cell nextCell = cellIterator.next();
                 int columnIndex = nextCell.getColumnIndex();
+                Double cellValue;
                 switch (columnIndex) {
                     case 0:
                         aProduct.setName((String) ExcelUtil.getCellValue(nextCell));
@@ -190,19 +187,23 @@ public class ProductServiceImpl implements ProductService {
                         aProduct.setDetail((String) ExcelUtil.getCellValue(nextCell));
                         break;
                     case 3:
-                        Double cellValue = (Double) ExcelUtil.getCellValue(nextCell);
+                        cellValue = (Double) ExcelUtil.getCellValue(nextCell);
+                        assert cellValue != null;
                         aProduct.setCategoryId(cellValue.intValue());
                         break;
                     case 4:
                         cellValue = (Double) ExcelUtil.getCellValue(nextCell);
+                        assert cellValue != null;
                         aProduct.setPrice(cellValue.intValue());
                         break;
                     case 5:
                         cellValue = (Double) ExcelUtil.getCellValue(nextCell);
+                        assert cellValue != null;
                         aProduct.setStock(cellValue.intValue());
                         break;
                     case 6:
                         cellValue = (Double) ExcelUtil.getCellValue(nextCell);
+                        assert cellValue != null;
                         aProduct.setStatus(cellValue.intValue());
                         break;
                     default:

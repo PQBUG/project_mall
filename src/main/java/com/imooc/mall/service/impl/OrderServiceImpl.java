@@ -61,8 +61,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderItemMapper orderItemMapper;
 
-    @Value("${file.upload.ip}")
-    String ip;
+    @Value("${file.upload.uri}")
+    String uri;
 
     @Autowired
     UserService userService;
@@ -78,8 +78,7 @@ public class OrderServiceImpl implements OrderService {
         //从购物车查找已经勾选的商品
         List<CartVO> cartVOList = cartService.list(userId);
         ArrayList<CartVO> cartVOListTemp = new ArrayList<>();
-        for (int i = 0; i < cartVOList.size(); i++) {
-            CartVO cartVO = cartVOList.get(i);
+        for (CartVO cartVO : cartVOList) {
             if (cartVO.getSelected().equals(Cart.SELECTED)) {
                 cartVOListTemp.add(cartVO);
             }
@@ -94,8 +93,7 @@ public class OrderServiceImpl implements OrderService {
         //把购物车对象转为订单item对象
         List<OrderItem> orderItemList = cartVOListToOrderItemList(cartVOList);
         //扣库存
-        for (int i = 0; i < orderItemList.size(); i++) {
-            OrderItem orderItem = orderItemList.get(i);
+        for (OrderItem orderItem : orderItemList) {
             Product product = productMapper.selectByPrimaryKey(orderItem.getProductId());
             int stock = product.getStock() - orderItem.getQuantity();
             if (stock < 0) {
@@ -123,8 +121,7 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.insertSelective(order);
 
         //循环保存每个商品到order_item表
-        for (int i = 0; i < orderItemList.size(); i++) {
-            OrderItem orderItem = orderItemList.get(i);
+        for (OrderItem orderItem : orderItemList) {
             orderItem.setOrderNo(order.getOrderNo());
             orderItemMapper.insertSelective(orderItem);
         }
@@ -134,24 +131,21 @@ public class OrderServiceImpl implements OrderService {
 
     private Integer totalPrice(List<OrderItem> orderItemList) {
         Integer totalPrice = 0;
-        for (int i = 0; i < orderItemList.size(); i++) {
-            OrderItem orderItem = orderItemList.get(i);
+        for (OrderItem orderItem : orderItemList) {
             totalPrice += orderItem.getTotalPrice();
         }
         return totalPrice;
     }
 
     private void cleanCart(List<CartVO> cartVOList) {
-        for (int i = 0; i < cartVOList.size(); i++) {
-            CartVO cartVO = cartVOList.get(i);
+        for (CartVO cartVO : cartVOList) {
             cartMapper.deleteByPrimaryKey(cartVO.getId());
         }
     }
 
     private List<OrderItem> cartVOListToOrderItemList(List<CartVO> cartVOList) {
         List<OrderItem> orderItemList = new ArrayList<>();
-        for (int i = 0; i < cartVOList.size(); i++) {
-            CartVO cartVO = cartVOList.get(i);
+        for (CartVO cartVO : cartVOList) {
             OrderItem orderItem = new OrderItem();
             orderItem.setProductId(cartVO.getProductId());
             //记录商品快照信息
@@ -166,8 +160,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void validSaleStatusAndStock(List<CartVO> cartVOList) {
-        for (int i = 0; i < cartVOList.size(); i++) {
-            CartVO cartVO = cartVOList.get(i);
+        for (CartVO cartVO : cartVOList) {
             Product product = productMapper.selectByPrimaryKey(cartVO.getProductId());
             //判断商品是否存在，商品是否上架
             if (product == null || product.getStatus().equals(SaleStatus.NOT_SALE)) {
@@ -192,8 +185,7 @@ public class OrderServiceImpl implements OrderService {
         if (!order.getUserId().equals(userId)) {
             throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
         }
-        OrderVO orderVO = getOrderVO(order);
-        return orderVO;
+        return getOrderVO(order);
     }
 
     private OrderVO getOrderVO(Order order) {
@@ -202,8 +194,7 @@ public class OrderServiceImpl implements OrderService {
         //获取订单对应的orderItemVOList
         List<OrderItem> orderItemList = orderItemMapper.selectByOrderNo(order.getOrderNo());
         List<OrderItemVO> orderItemVOList = new ArrayList<>();
-        for (int i = 0; i < orderItemList.size(); i++) {
-            OrderItem orderItem = orderItemList.get(i);
+        for (OrderItem orderItem : orderItemList) {
             OrderItemVO orderItemVO = new OrderItemVO();
             BeanUtils.copyProperties(orderItem, orderItemVO);
             orderItemVOList.add(orderItemVO);
@@ -226,8 +217,7 @@ public class OrderServiceImpl implements OrderService {
 
     private List<OrderVO> orderListToOrderVOList(List<Order> orderList) {
         List<OrderVO> orderVOList = new ArrayList<>();
-        for (int i = 0; i < orderList.size(); i++) {
-            Order order = orderList.get(i);
+        for (Order order : orderList) {
             OrderVO orderVO = getOrderVO(order);
             orderVOList.add(orderVO);
         }
@@ -262,15 +252,13 @@ public class OrderServiceImpl implements OrderService {
                 .getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
 
-        String address = ip + ":" + request.getLocalPort();
+        String address = uri;
         String payUrl = "http://" + address + "/pay?orderNo=" + orderNo;
         try {
             QRCodeGenerator
                     .generateQRCodeImage(payUrl, 350, 350,
                             Constant.FILE_UPLOAD_DIR + orderNo + ".png");
-        } catch (WriterException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (WriterException | IOException e) {
             e.printStackTrace();
         }
         String pngAddress = "http://" + address + "/images/" + orderNo + ".png";

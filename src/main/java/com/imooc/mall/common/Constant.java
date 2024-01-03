@@ -28,15 +28,12 @@ public class Constant {
     public static final Integer IMAGE_SIZE = 400;
     public static final Float IMAGE_OPA = 0.5F;
     public static final String WATER_MARK_JPG = "wartermark.jpg";
-
     public static String FILE_UPLOAD_DIR;
 
     @Value("${file.upload.dir}")
     public void setFileUploadDir(String fileUploadDir) {
         FILE_UPLOAD_DIR = fileUploadDir;
     }
-
-
 
     public interface ProductListOrderBy {
 

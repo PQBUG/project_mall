@@ -1,5 +1,6 @@
 package com.imooc.mall.config;
 
+import com.auth0.jwt.algorithms.Algorithm;
 import com.imooc.mall.filter.AdminFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

@@ -3,6 +3,7 @@ package com.imooc.mall.controller;
 import com.github.pagehelper.PageInfo;
 import com.imooc.mall.common.ApiRestResponse;
 import com.imooc.mall.common.Constant;
+import com.imooc.mall.common.ValidList;
 import com.imooc.mall.exception.ImoocMallException;
 import com.imooc.mall.exception.ImoocMallExceptionEnum;
 import com.imooc.mall.model.pojo.Product;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -160,6 +162,29 @@ public class ProductAdminController {
         String address = uri;
         return ApiRestResponse
                 .success( "http://" + address + "/images/" + newFileName);
+    }
+
+    @ApiOperation("后台批量更新商品，ValidList验证")
+    @PostMapping("/admin/product/batchUpdate2")
+    public ApiRestResponse batchUpdateProduct2(@Valid @RequestBody ValidList<UpdateProductReq> updateProductReqList) {
+        for (UpdateProductReq updateProductReq : updateProductReqList) {
+            Product product = new Product();
+            BeanUtils.copyProperties(updateProductReq, product);
+            productService.update(product);
+        }
+        return ApiRestResponse.success();
+    }
+
+
+    @ApiOperation("后台批量更新商品，@Validated验证")
+    @PostMapping("/admin/product/batchUpdate3")
+    public ApiRestResponse batchUpdateProduct3(@Valid @RequestBody List<UpdateProductReq> updateProductReqList) {
+        for (UpdateProductReq updateProductReq : updateProductReqList) {
+            Product product = new Product();
+            BeanUtils.copyProperties(updateProductReq, product);
+            productService.update(product);
+        }
+        return ApiRestResponse.success();
     }
 
     private static void createFile(MultipartFile file, File fileDirectory, File destFile) {

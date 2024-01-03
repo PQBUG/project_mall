@@ -25,6 +25,9 @@ public class Constant {
     public static final String USER_NAME = "user_name";
     public static final String USER_ROLE = "user_role";
     public static final Long EXPIRE_TIME = 60 * 10000 * 60 * 24 * 100L;
+    public static final Integer IMAGE_SIZE = 400;
+    public static final Float IMAGE_OPA = 0.5F;
+    public static final String WATER_MARK_JPG = "wartermark.jpg";
 
     public static String FILE_UPLOAD_DIR;
 
